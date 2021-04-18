@@ -1,1 +1,2 @@
 # Artificial-intelligence-CSE-UOI
+🇦🇱
