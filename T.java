@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 class T
 {
-    public static ArrayList<Integer> reverse(ArrayList al)
+    public static ArrayList<Integer> reverse(ArrayList<Integer> al)
     {
 
         for (int i = 0, j = al.size() - 1; i < j; i++)
@@ -13,7 +13,7 @@ class T
         return(al);
     }
 
-    public static ArrayList<Integer> join(ArrayList ral, ArrayList ar)
+    public static ArrayList<Integer> join(ArrayList<Integer> ral, ArrayList<Integer> ar)
     {
         ArrayList<Integer> b = new ArrayList<Integer>(ral);
         b.addAll(ar);
@@ -40,7 +40,7 @@ class T
         return(lists);
     }
 
-    public static ArrayList<Integer> t(ArrayList a,int k) {
+    public static ArrayList<Integer> t(ArrayList<Integer> a,int k) {
         ArrayList<ArrayList<Integer>> lists = split(a, k);
         ArrayList<Integer> al = lists.get(0);
         ArrayList<Integer> ar = lists.get(1);
