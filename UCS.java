@@ -65,7 +65,7 @@ class UCS{
 		Scanner input = new Scanner(System.in);
 		ArrayList<ArrayList<Integer>> searchFrontier = new ArrayList<ArrayList<Integer>>();  //metopo anazithshs
 		ArrayList<Integer> startingState = new ArrayList<Integer>();  						 //arxikh katastash
-		HashMap<String,Integer> visitedNodes = new HashMap<String,Integer>();                // kleisto sinolo pou parallila tha krataei to depth tou kathe kombou pou tha exoume episkefthei
+		HashMap<ArrayList<Integer>,Integer> visitedNodes = new HashMap<ArrayList<Integer>,Integer>();                // kleisto sinolo pou parallila tha krataei to depth tou kathe kombou pou tha exoume episkefthei
 		
 		
 		
@@ -79,7 +79,7 @@ class UCS{
 			startingState.add(temp);	
 		}
 		searchFrontier.add(startingState);    //bazo thn arxikh katastash sto metopo anazitishs
-		visitedNodes.put(toString(startingState),0);
+		visitedNodes.put(startingState,0);
 		
 		String finalStrn="";
 		for(int n=1; n<=N; n++) {
@@ -95,16 +95,16 @@ class UCS{
 		visitedNodes.put(toString(extra),-1);**/
 		
 		ArrayList<Integer> minDepth = searchFrontier.get(0);
-		int depthOfMin = visitedNodes.get(toString(searchFrontier.get(0)));
+		int depthOfMin = visitedNodes.get(searchFrontier.get(0));
 		
 
 		while(searchFrontier.size()!=0) { // UCS
 			minDepth = searchFrontier.get(0);
-			depthOfMin = visitedNodes.get(toString(minDepth));
+			depthOfMin = visitedNodes.get(minDepth);
 			for(ArrayList<Integer> min: searchFrontier) {	
-				if(visitedNodes.get(toString(min))<depthOfMin) {
+				if(visitedNodes.get(min)<depthOfMin) {
 					minDepth = min; 
-					depthOfMin = visitedNodes.get(toString(min));
+					depthOfMin = visitedNodes.get(min);
 				}	
 			
 			}
@@ -113,6 +113,7 @@ class UCS{
 			if(finalStrn.equals(toString(minDepth))){    //tsekaro an o kombos pou pao na epektino einai h telikh katastash
 				System.out.println("I found the Final Node");
 				System.out.println(toString(minDepth));
+				System.out.println("Depth of Final State: " + visitedNodes.get(minDepth));
 				break;
 			}
 			
@@ -120,9 +121,9 @@ class UCS{
 			
 								/// prosthese kombous sto metopo
 			for(int k=2; k<=N; k++) {
-				if(visitedNodes.containsKey(toString(t(minDepth,k)))==false){ /// exo problima edo!
+				if(visitedNodes.containsKey(t(minDepth,k))==false){ /// exo problima edo!
 					searchFrontier.add(t(minDepth,k));
-					visitedNodes.put(toString(t(minDepth,k)),(visitedNodes.get(toString(minDepth))+1));
+					visitedNodes.put(t(minDepth,k),(visitedNodes.get(minDepth)+1));
 				}
 			}
 			
@@ -132,6 +133,8 @@ class UCS{
 				System.out.println(toString(min));
 				
 			}
+			System.out.println("----------------------");
+			//int lmao = Integer.parseInt(input.next());
 			
 		}
 		
