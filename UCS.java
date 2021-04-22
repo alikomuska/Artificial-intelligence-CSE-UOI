@@ -19,8 +19,7 @@ class UCS{
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
 		ArrayList<ArrayList<Integer>> searchFrontier = new ArrayList<ArrayList<Integer>>();  //metopo anazithshs
-		ArrayList<Integer> startingState = new ArrayList<Integer>();   
-		ArrayList<Integer> extra = new ArrayList<Integer>();       //arxikh katastash
+		ArrayList<Integer> startingState = new ArrayList<Integer>();  						 //arxikh katastash
 		HashMap<String,Integer> visitedNodes = new HashMap<String,Integer>();                // kleisto sinolo pou parallila tha krataei to depth tou kathe kombou pou tha exoume episkefthei
 		
 		
@@ -36,6 +35,12 @@ class UCS{
 		}
 		searchFrontier.add(startingState);    //bazo thn arxikh katastash sto metopo anazitishs
 		visitedNodes.put(toString(startingState),0);
+		
+		String finalStrn="";
+		for(int n=1; n<=N; n++) {
+			finalStrn = finalStrn + n;
+		}
+
 		
 		/**
 		extra.add(4);
@@ -56,16 +61,33 @@ class UCS{
 					minDepth = min; 
 					depthOfMin = visitedNodes.get(toString(min));
 				}	
-			}	
-						/// prosthese kombous sto metopo
+			
+			}
+			
+			
+			
+			if(finalStrn.equals(toString(minDepth))){    //tsekaro an o kombos pou pao na epektino einai h telikh katastash
+				System.out.println("I found the Final Node");
+				System.out.println(toString(minDepth));
+				break;
+			}
+			
+			
+			
+			
+			
+			
+			
+								/// prosthese kombous sto metopo
 			for(int k=2; k<=N; k++) {
 				if(searchFrontier.contains(toString(T(minDepth,k)))==false){
 					searchFrontier.add(T(minDepth,k));
 					visitedNodes.put(toString(T(minDepth,k)),(visitedNodes.get(toString(minDepth))+1));
 				}
 			}
-			break;
 			
+			
+			searchFrontier.remove(toString(minDepth)); // bgazo to kombo pou epektina
 			
 		}
 		
