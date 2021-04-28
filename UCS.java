@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -52,78 +53,93 @@ class UCS{
         ArrayList<Integer> b = join(ral, ar);
         return (b);
     }
+    
+    
+    public static void printPath(Node finalNode) {
+    	ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+    	Node pointer = finalNode;
+    	while(pointer.getFather()!=null) {
+    		temp.add(pointer.getState());
+    		pointer = pointer.getFather();
+    	}
+    	temp.add(pointer.getState());
+    	System.out.print("Path is: " + temp.get(temp.size()-1));
+    	
+    	for(int i=temp.size()-2; i>-1; i--) {
+    		System.out.print("-> " + temp.get(i));	
+    	}
+    	
+    	return;	
+    }
 
 	
+    
+    
 	public static void main(String[] args) {
 		Scanner input = new Scanner(System.in);
-		ArrayList<ArrayList<Integer>> searchFrontier = new ArrayList<ArrayList<Integer>>();  //metopo anazithshs
+		ArrayList<Node> searchFrontier = new ArrayList<Node>();  //metopo anazithshs
+		HashMap<ArrayList<Integer>,Integer> visitedNodes = new HashMap<ArrayList<Integer>,Integer>();  // kleisto sinolo pou parallila tha krataei to depth tou kathe kombou pou tha exoume episkefthei
+		
 		ArrayList<Integer> startingState = new ArrayList<Integer>();  						 //arxikh katastash
 		ArrayList<Integer> finalState = new ArrayList<Integer>();  		
-		HashMap<ArrayList<Integer>,Integer> visitedNodes = new HashMap<ArrayList<Integer>,Integer>();  // kleisto sinolo pou parallila tha krataei to depth tou kathe kombou pou tha exoume episkefthei
 		
 		
 		
 		System.out.println("Give me N");    //zhtao to N
 		int N = Integer.parseInt(input.next()); 
+	
 		
 		System.out.println("Give me one by one the numbers of the Starting State");
-		
 		for(int i=0; i<N; i++) {        //pairno ena ena tous arithmous me thn shra ths arxikhs katastashs
 			int temp = Integer.parseInt(input.next()); 
 			startingState.add(temp);	
 		}
 		
-		searchFrontier.add(startingState);    //bazo thn arxikh katastash sto metopo anazitishs
-		visitedNodes.put(startingState,0);
-				
+
+		Node startingNode = new Node(null,startingState);
 		
+		
+		searchFrontier.add(startingNode);    //bazo thn arxikh katastash sto metopo anazitishs
+		visitedNodes.put(startingNode.getState(),0);
+	
 		
 		for(int n=1; n<=N; n++) {
 			finalState.add(n);
 		}
 
 		
-		
-		ArrayList<Integer> minDepth = searchFrontier.get(0);
-		int depthOfMin = visitedNodes.get(searchFrontier.get(0));
-		
 
 		while(searchFrontier.size()!=0) { // UCS
-			minDepth = searchFrontier.get(0);
-			depthOfMin = visitedNodes.get(minDepth);
-			for(ArrayList<Integer> min: searchFrontier) {	
-				if(visitedNodes.get(min)<depthOfMin) {
+			Node minDepth = searchFrontier.get(0);
+			int depthOfMin = visitedNodes.get(minDepth.getState());
+			for(Node min: searchFrontier) {	
+				if(visitedNodes.get(min.getState())<depthOfMin) {
 					minDepth = min; 
-					depthOfMin = visitedNodes.get(min);
+					depthOfMin = visitedNodes.get(min.getState());
 				}	
 			
 			}
 			
-			
-			if(finalState.equals(minDepth)){    //tsekaro an o kombos pou pao na epektino einai h telikh katastash
-				System.out.println("I found the Final Node");
-				System.out.println(minDepth);
-				System.out.println("Depth of Final State: " + visitedNodes.get(minDepth));
-				break;
-			}
-			
-			
+
 			
 								
 			for(int k=2; k<=N; k++) {   /// prosthese kombous pou the exeis ksanadei sto metopo
-				if(visitedNodes.containsKey(t(minDepth,k))==false){
-					searchFrontier.add(t(minDepth,k));
-					visitedNodes.put(t(minDepth,k),(visitedNodes.get(minDepth)+1));
+				ArrayList<Integer> temp;
+				if(visitedNodes.containsKey(temp = t(minDepth.getState(),k))==false){
+					Node tempNode = new Node(minDepth,temp);
+					if(finalState.equals(temp)){    //tsekaro an o kombos pou pao na epektino einai h telikh katastash
+						System.out.println("I found the Final Node");
+						printPath(tempNode);
+						System.out.println("\nDepth of Final State: " + (visitedNodes.get(minDepth.getState())+1));
+						return;
+					}
+					searchFrontier.add(tempNode);
+					visitedNodes.put(t(minDepth.getState(),k),(visitedNodes.get(minDepth.getState())+1));		
 				}
 			}
 			
 			searchFrontier.remove(minDepth); // bgazo to kombo pou epektina		
-			
-			for(ArrayList<Integer> min: searchFrontier) {
-				System.out.println(min);
-				
-			}
-			System.out.println("----------------------");
+			System.out.println("...");
 			
 		}
 		
