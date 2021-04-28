@@ -94,6 +94,7 @@ class UCS{
 			int temp = Integer.parseInt(input.next()); 
 			startingState.add(temp);	
 		}
+		System.out.println("Calculating...");
 		
 
 		Node startingNode = new Node(null,startingState);
@@ -138,8 +139,7 @@ class UCS{
 				}
 			}
 			
-			searchFrontier.remove(minDepth); // bgazo to kombo pou epektina		
-			System.out.println("...");
+			searchFrontier.remove(minDepth); // bgazo to kombo pou epektina
 		}
 		
 	}
