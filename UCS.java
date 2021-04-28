@@ -120,12 +120,12 @@ class UCS{
 			
 			}
 			
-								
+			nodeExtension++;
+					
 			for(int k=2; k<=N; k++) {   /// prosthese kombous pou the exeis ksanadei sto metopo
 				ArrayList<Integer> temp;
 				if(visitedNodes.containsKey(temp = t(minDepth.getState(),k))==false){
 					Node tempNode = new Node(minDepth,temp);
-					nodeExtension++;
 					if(finalState.equals(temp)){    //tsekaro an o kombos pou pao na epektino einai h telikh katastash
 						System.out.println("I found the Final Node");
 						printPath(tempNode);
@@ -140,7 +140,6 @@ class UCS{
 			
 			searchFrontier.remove(minDepth); // bgazo to kombo pou epektina		
 			System.out.println("...");
-			
 		}
 		
 	}
