@@ -128,7 +128,7 @@ class UCS{
 				if(visitedNodes.containsKey(temp = t(minDepth.getState(),k))==false){
 					Node tempNode = new Node(minDepth,temp);
 					if(finalState.equals(temp)){    //tsekaro an o kombos pou pao na epektino einai h telikh katastash
-						System.out.println("I found the Final Node");
+						System.out.println("Final Node Found!");
 						printPath(tempNode);
 						System.out.println("\nDepth of Final State: " + (visitedNodes.get(minDepth.getState())+1));
 						System.out.println("Nodes extensions: " + nodeExtension);
