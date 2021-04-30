@@ -1,9 +1,14 @@
+
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class Minimax
 {
-    static class Move {
+    // class gia thn kinhsh tou kathe paikth
+    static class Move { 
         int row = -1;
         int col = -1;
-        char symbol; // can be s or o
+        char symbol; 
         int move_value;
 
         public String toString() {
@@ -12,92 +17,43 @@ public class Minimax
     };
 
     static char A = 'A', B = 'B';
-    static int[] Aplace, Bplace = new int[2];
+    static boolean Max = true;
 
-    static Boolean movesLeft(char board[][], int place[])
-    {
-        if (place[0] == 0 && place[1] == 0)
-        {
-            if ((board[place[0]][place[1] + 1] == 'w') || (board[place[0] + 1][place[1] + 1] == 'w')
-                    || (board[place[0] + 1][place[1]] == 'w'))
-            {
-                return true;
-            }
-        }
-        if (place[0] == 0 && place[1] == board[1].length)
-        {
-            if ((board[place[0]][place[1] - 1] == 'w') || (board[place[0] + 1][place[1] - 1] == 'w')
-                    || (board[place[0] + 1][place[1]] == 'w'))
-                    
-            {
-                return true;
-            }
-        }
-        if (place[0] == board[0].length && place[1] == 0)
-        {
-            if ((board[place[0] - 1][place[1]] == 'w') || (board[place[0] - 1][place[1] + 1] == 'w')
-                    || (board[place[0]][place[1] + 1] == 'w'))
-            {
-                return true;
-            }
-        }
-        if (place[0] == 0 && place[1] == 0)
-        {
-            if ((board[place[0] - 1][place[1]] == 'w') || (board[place[0] - 1][place[1] - 1] == 'w')
-                    || (board[place[0]][place[1] - 1] == 'w'))
-            {
-                return true;
-            }
-        }
+    // Vohthitikh methodos gia na vlepoume an h kinhsh enws paikth einai ektos tou
+    // board
+    static Boolean outOfBounds(char arr[][], int row, int col) { 
+        boolean tooSmall = (row < 0 || col < 0);
+        boolean tooBig = (row > (arr.length - 1) || (col > arr[0].length - 1));
 
-        if(place[1]==0)
-        {
-            if((board[place[0]-1][place[1]]=='w')|| (board[place[0] - 1][place[1]+1] == 'w')
-                    || (board[place[0]][place[1] + 1] == 'w') || (board[place[0] + 1][place[1] + 1] == 'w')
-                    || (board[place[0] + 1][place[1]] == 'w'))
-            {
-                return true;
+        return (tooBig || tooSmall);
+    }
+    
+    //Methodos pou koitaei an o paikths exei eleutheres kinhseis perimetrika tou
+    static Boolean movesLeft(char board[][], int place[]) { 
+        if (board[0].length - 1 < place[0] || board[1].length - 1 < place[1]) {
+            System.exit(0);
+        }
+        int offsetRow, offsetCol;
+        int row = place[0];
+        int col = place[1];
+        for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+            offsetRow = row + rowOffset;
+            for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                offsetCol = col + colOffset;
+                if (!outOfBounds(board, offsetRow, offsetRow) && !(rowOffset == 0 && colOffset == 0)
+                        && !(offsetRow > board[0].length - 1 || offsetCol > board[1].length - 1)
+                        && !(offsetRow < 0 || offsetCol < 0)) {
+                    if (board[offsetRow][offsetCol] == '+') {
+                        return true;
+                    }
+                }
             }
         }
-        if(place[1]==board[1].length)
-        {
-            if((board[place[0]-1][place[1]]=='w')|| (board[place[0] + 1][place[1]] == 'w') 
-                    || (board[place[0] + 1][place[1] - 1] == 'w') || (board[place[0]][place[1] - 1] == 'w')
-                    || (board[place[0] - 1][place[1] - 1] == 'w'))
-            {
-                return true;
-            }
-        }
-        if(place[0]==0)
-        {
-            if((board[place[0]][place[1] + 1] == 'w') || (board[place[0] + 1][place[1] + 1] == 'w')
-                    || (board[place[0] + 1][place[1]] == 'w') || (board[place[0] + 1][place[1] - 1] == 'w')
-                    || (board[place[0]][place[1] - 1] == 'w'))
-            {
-                return true;
-            }
-        }
-        if(place[0]==board[0].length)
-        {
-            if((board[place[0]-1][place[1]]=='w')|| (board[place[0] - 1][place[1]+1] == 'w')
-                    || (board[place[0]][place[1] + 1] == 'w') || (board[place[0]][place[1] - 1] == 'w') 
-                    || (board[place[0] - 1][place[1] - 1] == 'w'))
-            {
-                return true;
-            }
-        }
-        
-        if ((board[place[0] - 1][place[1]] == 'w') || (board[place[0] - 1][place[1] + 1] == 'w')
-                || (board[place[0]][place[1] + 1] == 'w') || (board[place[0] + 1][place[1] + 1] == 'w')
-                || (board[place[0] + 1][place[1]] == 'w') || (board[place[0] + 1][place[1] - 1] == 'w')
-                || (board[place[0]][place[1] - 1] == 'w') || (board[place[0] - 1][place[1] - 1] == 'w'))
-        {
-            return true;
-        }
-        
         return false;
     }
 
+    //Methodos pou elegxei an kapoios apo tous dyo paiktes den exei ypoloipomenes kinhseis
+    //tote kerdizei o allos
     static int evaluate(char board[][], int aplace[], int bplace[])
     {
         if(!movesLeft(board, bplace))
@@ -111,71 +67,195 @@ public class Minimax
         return 0;
     }
 
+    //Methodos ylopoihshs tou minimax, anadromika
     static int minimax(char board[][], int depth, Boolean isMax, int aplace[], int bplace[])
     {
         int score = evaluate(board, aplace, bplace);
 
-        // If Maximizer has won the game
-        // return his/her evaluated score
         if (score == 10)
             return score;
 
-        // If Minimizer has won the game
-        // return his/her evaluated score
         if (score == -10)
             return score;
 
-        // If there are no more moves and
-        // no winner then it is a tie
         if (((movesLeft(board,aplace))&& (movesLeft(board, bplace))) == false)
-            return 0;
+            return 0;//gfgdfgd
 
-        // If this maximizer's move
+        // If this max move
         if (isMax) {
             int best = -1000;
 
-            // Traverse all cells
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                    // Check if cell is empty
-                    if (board[i][j] == 'w') {
-                        // Make the move
-                        board[i][j] = A;
+            // Traverse cells adjacent to max
+            int offsetRow, offsetCol;
+            int row = aplace[0];
+            int col = aplace[1];
+            for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+                offsetRow = row + rowOffset;
+                for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                    offsetCol = col + colOffset;
+                    if (!outOfBounds(board, offsetRow, offsetRow) && !(rowOffset == 0 && colOffset == 0)
+                            && !(offsetRow > board[0].length - 1 || offsetCol > board[1].length - 1)
+                            && !(offsetRow < 0 || offsetCol < 0)) {
+                        if (board[offsetRow][offsetCol] == '+') {
+                            // Make the move
+                            board[offsetRow][offsetCol] = A;
 
-                        // Call minimax recursively and choose
-                        // the maximum value
-                        best = Math.max(best, minimax(board, depth + 1, !isMax, aplace,bplace));
-
-                        // Undo the move
-                        board[i][j] = 'w';
+                            best = Math.min(best, minimax(board, depth + 1, !isMax, aplace, bplace));
+ 
+                            // Undo the move
+                            board[offsetRow][offsetCol] = '+';
+                        }
                     }
                 }
             }
             return best;
         }
 
-        // If this minimizer's move
+        // If this min move
         else {
-            int best = 1000;
+            int best = -1000;
 
-            // Traverse all cells
-            for (int i = 0; i < board.length; i++) {
-                for (int j = 0; j < board[0].length; j++) {
-                    // Check if cell is empty
-                    if (board[i][j] == 'w') {
-                        // Make the move
-                        board[i][j] = B;
+            // Traverse cells adjacent to max
+            int offsetRow, offsetCol;
+            int row = bplace[0];
+            int col = bplace[1];
+            for (int rowOffset = -1; rowOffset <= 1; rowOffset++) {
+                offsetRow = row + rowOffset;
+                for (int colOffset = -1; colOffset <= 1; colOffset++) {
+                    offsetCol = col + colOffset;
+                    if (!outOfBounds(board, offsetRow, offsetRow) && !(rowOffset == 0 && colOffset == 0)
+                            && !(offsetRow > board[0].length - 1 || offsetCol > board[1].length - 1)
+                            && !(offsetRow < 0 || offsetCol < 0)) {
+                        if (board[offsetRow][offsetCol] == '+') {
+                            // Make the move
+                            board[offsetRow][offsetCol] = B;
 
-                        // Call minimax recursively and choose
-                        // the minimum value
-                        best = Math.min(best, minimax(board, depth + 1, !isMax, aplace, bplace));
+                            best = Math.min(best, minimax(board, depth + 1, !isMax, aplace, bplace));
 
-                        // Undo the move
-                        board[i][j] = 'w';
+                            // Undo the move
+                            board[offsetRow][offsetCol] = '+';
+                        }
                     }
                 }
             }
             return best;
         }
+    }
+
+    //Methodos pou kanei thn kalyterh kinhsh pou vrihke o minimax
+    static Move findBestMove(char[][] board, Boolean isMax, int aplace[], int bplace[]) {
+
+        Move bestMove = new Move();
+        int bestVal;
+
+        if (isMax)
+            bestVal = -1000;
+        else 
+            bestVal = 1000; 
+
+        // Traverse cells adjacent to max
+            int offsetRow, offsetCol;
+            int row = aplace[0];
+            int col = aplace[1];
+            for (int rowOffset = -1; rowOffset <= 1; rowOffset++)
+            {
+                offsetRow = row + rowOffset;
+                for (int colOffset = -1; colOffset <= 1; colOffset++)
+                {
+                    offsetCol = col + colOffset;
+                    if (!outOfBounds(board, offsetRow, offsetRow) && !(rowOffset == 0 && colOffset == 0)
+                            && !(offsetRow > board[0].length - 1 || offsetCol > board[1].length - 1)
+                            && !(offsetRow < 0 || offsetCol < 0))
+                    {
+
+                        if (board[offsetRow][offsetCol] == '+')
+                        {
+
+                            board[offsetRow][offsetCol] = A;
+                            int move_value =  minimax(board, 0, isMax, aplace, bplace);
+
+                            board[offsetRow][offsetCol] = '+';
+
+                            if (isMax)
+                            {
+                                if (move_value >= bestVal)
+                                {
+                                    bestMove.row = offsetRow;
+                                    bestMove.col = offsetCol;
+                                    board[aplace[0]][aplace[1]] = '*';
+                                    bestMove.symbol = A;
+                                    bestMove.move_value = move_value;
+                                    bestVal = move_value;
+                                }
+                            }
+                            else
+                            {
+                                if (move_value < bestVal)
+                                {
+                                    bestMove.row = offsetRow;
+                                    bestMove.col = offsetCol;
+                                    board[aplace[0]][aplace[1]] = '*';
+                                    bestMove.symbol = A;
+                                    bestMove.move_value = move_value;
+                                    bestVal = move_value;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        return bestMove;
+    }
+
+    public static void main(String[] args) {
+        char[][] board = { { 'A', '+', '+' }, 
+                            { '+', '+', '+' }, 
+                            { '+', '+', 'B' } };
+        printBoard(board);
+        int[] Aplace = new int[]{0,0};
+        int[] Bplace = new int[] { 2, 2 };
+        while ( (movesLeft(board,Aplace))&& (movesLeft(board, Bplace)) ) {
+
+            if (Max) {
+                System.out.println("COMPUTER TURN:");
+                Move bestMove = findBestMove(board, true, Aplace, Bplace);
+                board[bestMove.row][bestMove.col] = bestMove.symbol;
+                Aplace[0]=bestMove.row;
+                Aplace[1] = bestMove.col;
+
+                printBoard(board);
+                if (evaluate(board, Aplace, Bplace) == 10) {
+                    System.out.println("YOU LOSE");
+                    return;
+                }
+                Max = false;
+
+            } else {
+                System.out.println("PLAYER TURN:");
+                Scanner player_input = new Scanner(System.in);
+                System.out.println("Please give the coordinates for your move separated with comma e.g. 1,2");
+                String input = player_input.nextLine();
+                String[] coordinates = input.split(",");
+                int i = Integer.parseInt(coordinates[0]);
+                int j = Integer.parseInt(coordinates[1]);
+                char symbol = B;
+                board[i][j] = symbol;
+                Bplace[0] = i;
+                Bplace[1] = j;
+                printBoard(board);
+                if (evaluate(board, Aplace, Bplace) == -10) {
+                    System.out.println("YOU WIN");
+                    return;
+                }
+                Max = true;
+            }
+        }
+    }
+
+    public static void printBoard(char[][] board) {
+        System.out.println("____BOARD____");
+        for (char[] row : board)
+            System.out.println(Arrays.toString(row));
+        System.out.println("\n");
     }
 }
