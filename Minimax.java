@@ -1,3 +1,4 @@
+//O paikths mporei na kineitai mono ena block gyrw tou
 
 import java.util.Arrays;
 import java.util.Scanner;
@@ -43,7 +44,8 @@ public class Minimax
                 if (!outOfBounds(board, offsetRow, offsetRow) && !(rowOffset == 0 && colOffset == 0)
                         && !(offsetRow > board[0].length - 1 || offsetCol > board[1].length - 1)
                         && !(offsetRow < 0 || offsetCol < 0)) {
-                    if (board[offsetRow][offsetCol] == '+') {
+                    if ((board[offsetRow][offsetCol] == '+')||(board[offsetRow][offsetCol] == B))
+                    {
                         return true;
                     }
                 }
@@ -208,16 +210,38 @@ public class Minimax
     }
 
     public static void main(String[] args) {
-        char[][] board = { { 'A', '+', '+' }, 
-                            { '+', '+', '+' }, 
-                            { '+', '+', 'B' } };
+        Scanner board_input = new Scanner(System.in);
+        System.out.println("Please give the size of the board separated with comma e.g. 1,2");
+        String inp = board_input.nextLine();
+        String[] coords = inp.split(",");
+        int N = Integer.parseInt(coords[0]);
+        int M = Integer.parseInt(coords[1]);
+        char[][] board = new char[N][M];
+        for (int i = 0; i < N; i++)
+        {
+            for (int j = 0; j < M; j++)
+            {
+                board[i][j]='+';
+            }
+        }
         printBoard(board);
         int[] Aplace = new int[]{0,0};
-        int[] Bplace = new int[] { 2, 2 };
+        board[0][0] = A;
+        int[] Bplace = new int[2];
+        Scanner playerB_input = new Scanner(System.in);
+        System.out.println("Please give starting point of player B separated with comma e.g. 1,2");
+        String b_inp = playerB_input.nextLine();
+        String[] b_coords = b_inp.split(",");
+        int bi = Integer.parseInt(b_coords[0]);
+        int bj = Integer.parseInt(b_coords[1]);
+        board[bi][bj] = B;
+        Bplace[0] = bi;
+        Bplace[1] = bj;
+        board[Bplace[0]][Bplace[1]] = '*';
         while ( (movesLeft(board,Aplace))&& (movesLeft(board, Bplace)) ) {
 
             if (Max) {
-                System.out.println("COMPUTER TURN:");
+                System.out.println("Computer's Turn: ");
                 Move bestMove = findBestMove(board, true, Aplace, Bplace);
                 board[bestMove.row][bestMove.col] = bestMove.symbol;
                 Aplace[0]=bestMove.row;
@@ -225,13 +249,13 @@ public class Minimax
 
                 printBoard(board);
                 if (evaluate(board, Aplace, Bplace) == 10) {
-                    System.out.println("YOU LOSE");
+                    System.out.println("You Lose. :(");
                     return;
                 }
                 Max = false;
 
             } else {
-                System.out.println("PLAYER TURN:");
+                System.out.println("Player's Turn: ");
                 Scanner player_input = new Scanner(System.in);
                 System.out.println("Please give the coordinates for your move separated with comma e.g. 1,2");
                 String input = player_input.nextLine();
@@ -239,12 +263,14 @@ public class Minimax
                 int i = Integer.parseInt(coordinates[0]);
                 int j = Integer.parseInt(coordinates[1]);
                 char symbol = B;
+                board[Bplace[0]][Bplace[1]] = '*';
                 board[i][j] = symbol;
                 Bplace[0] = i;
                 Bplace[1] = j;
+
                 printBoard(board);
                 if (evaluate(board, Aplace, Bplace) == -10) {
-                    System.out.println("YOU WIN");
+                    System.out.println("You Win!");
                     return;
                 }
                 Max = true;
