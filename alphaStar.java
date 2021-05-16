@@ -1,12 +1,9 @@
-import java.util.Scanner;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
-class UCS{
-	
-	
-    public static ArrayList<Integer> reverse(ArrayList<Integer> al)
+public class alphaStar {
+	public static ArrayList<Integer> reverse(ArrayList<Integer> al)
     {
 
         for (int i = 0, j = al.size() - 1; i < j; i++)
@@ -72,11 +69,43 @@ class UCS{
     	return;	
     }
 
-	
+	public static int heuristic(Node node) {
+		boolean isFirstTeamItem=true;
+		boolean isIncreasing = false;
+		int teams=0;
+		
+		int pointerA = node.getState().get(0);
+		int pointerB; 
+		
+		for(int i=1; i<node.getState().size(); i++) {
+			pointerB = node.getState().get(i);
+			if(isFirstTeamItem==true) {
+				if((pointerA+1)==pointerB) {
+					isFirstTeamItem=false;
+					isIncreasing=true;
+				}
+				else if((pointerA-1)==pointerB) {
+					isFirstTeamItem=false;
+					isIncreasing=false;
+				}
+				else {
+					teams++;
+				}
+			}
+			else {
+				if((isIncreasing==true && pointerA+1!=pointerB) || (isIncreasing==false && pointerA-1!=pointerB)) {
+					isFirstTeamItem=true;
+					teams++;
+				}
+			}
+			pointerA = pointerB;
+		}
+		return teams;
+	}
     
     
 	public static void main(String[] args) {
-		System.out.println("UCS Algorithm");
+		System.out.println("Alpha-Star Algorithm");
 		Scanner input = new Scanner(System.in);
 		ArrayList<Node> searchFrontier = new ArrayList<Node>();  //metopo anazithshs
 		HashMap<ArrayList<Integer>,Integer> visitedNodes = new HashMap<ArrayList<Integer>,Integer>();  // kleisto sinolo pou parallila tha krataei to depth tou kathe kombou pou tha exoume episkefthei
@@ -95,6 +124,7 @@ class UCS{
 			int temp = Integer.parseInt(input.next()); 
 			startingState.add(temp);	
 		}
+		
 		if(N==1) {
 			System.out.println("Final Node Found!");
 			System.out.println("[" + startingState.get(0) + "]");	
@@ -102,6 +132,7 @@ class UCS{
 			System.out.println("Nodes extensions: 0");
 			return;
 		}
+		
 		
 		System.out.println("Calculating...");
 		
@@ -116,15 +147,15 @@ class UCS{
 		for(int n=1; n<=N; n++) {
 			finalState.add(n);
 		}
-		
-		
+
 		int nodeExtension=0;
 
 		while(searchFrontier.size()!=0) { // UCS
 			Node minDepth = searchFrontier.get(0);
 			int depthOfMin = visitedNodes.get(minDepth.getState());
+			int minDepthNodeHeuristic = heuristic(minDepth);
 			for(Node min: searchFrontier) {	
-				if(visitedNodes.get(min.getState())<depthOfMin) {
+				if(visitedNodes.get(min.getState()) + heuristic(min)<depthOfMin+minDepthNodeHeuristic) {
 					minDepth = min; 
 					depthOfMin = visitedNodes.get(min.getState());
 				}	
@@ -154,4 +185,4 @@ class UCS{
 		
 	}
 
- }
+}
